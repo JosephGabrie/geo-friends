@@ -5,14 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/josephgabrie/geo-friends/repositories"
-	"fmt"
+	
 )
-type AddUser struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	Age      int    `json:"age"`
-}
 
 type AddFriendRequest struct {
 	UserID   int `json:"user_id"`
@@ -24,15 +18,7 @@ type Ratings struct {
 	PlaceID int `json:"placeID"`
 }
 
-func AddUser(db *sql.DB, c *fiber.Ctx) error {
-	var user AddUser
-	if err := c.BodyParser(&user); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": "Invalid request"})
-	}
-	
-	if err := 
 
-}
 func AddFriend(db *sql.DB, c *fiber.Ctx) error {
 	var req AddFriendRequest
 

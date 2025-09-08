@@ -1,19 +1,21 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"database/sql"
 	"log"
 	"os"
-	"github.com/joho/godotenv"
-	"database/sql"
-	_"github.com/lib/pq"
-	"github.com/josephgabrie/geo-friends/handlers"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
+	"github.com/josephgabrie/geo-friends/handlers"
+	_ "github.com/lib/pq"
 )
+
 var db *sql.DB
+
 func init() {
 	err := godotenv.Load(".env")
-	if err != nil{
+	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
 	dsn := os.Getenv("DATABASE_URL")
@@ -27,18 +29,18 @@ func init() {
 		log.Fatal(connErr)
 	}
 
-	pingErr := db.Ping();
-	if  pingErr != nil {
-	log.Fatal("Cannot connect to database:", pingErr)
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal("Cannot connect to database:", pingErr)
 	}
 	log.Println("Connected to database successfully!")
 }
 
 func main() {
-	
+
 	app := fiber.New()
 
-	app.Get("/", func (c *fiber.Ctx) error {
+	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!!!!!")
 	})
 	app.Post("/friends", func(c *fiber.Ctx) error {
@@ -47,7 +49,12 @@ func main() {
 	app.Get("/friend", func(c *fiber.Ctx) error {
 		return c.SendString("I'm a GET request!")
 	})
+
+	app.Post("/userSignUp", func(c *fiber.Ctx) error {
+		return handlers.AddUser(db, c)
+	})
+	app.Get("/userSignIn", func(c *fiber.Ctx) error {
+		return handlers.GetUserLogin(db, c)
+	})
 	app.Listen(":3000")
-
-
 }
